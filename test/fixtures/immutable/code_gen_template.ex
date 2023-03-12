@@ -22,6 +22,13 @@ defmodule CodeGenTemplate do
 
       # This code block is more complex and has comments
       CodeGen.block "f3/1" do
+        # Comments are completely removed by Elixir's parser.
+        # Ways of preserving comments while easily allowing AST
+        # manipulation in an idiomatic way.
+        #
+        # The workaround is to use these custom attributes
+        # which are completely removed from the AST and replaced
+        # by comments when you dump the source code in the module
         @comment__ "This is a comment outside the function"
         @comment__ "This is a another comment outside the function"
         @comment__ "Yet another comment"
