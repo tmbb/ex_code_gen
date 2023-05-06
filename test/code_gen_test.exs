@@ -2,7 +2,7 @@ defmodule CodeGenTest do
   use ExUnit.Case
   doctest CodeGen
 
-  test "the right code is generated" do
+  test "CodeGen generates the the right code according to options" do
     assert CodeGenExample.f1(1) == 8
   end
 
@@ -14,16 +14,20 @@ defmodule CodeGenTest do
       File.cp!(src, dst)
       replace_in_file(dst, "defmodule CodeGenExample do", "defmodule CodeGenExample_Sandbox do")
 
+      # The file doesn't contain the generated code
+      refute File.read!(dst) =~ "def f1(x) do"
+      refute File.read!(dst) =~ "x + @constant1"
+
       # Compile the new file
       Kernel.ParallelCompiler.compile([dst])
 
-      # Add some indirections to avoid warnings
-      target_module = CodeGenExample_Sandbox
-      target_module.__code_gen_dump_source__("f1/1")
+      CodeGen.dump_source(CodeGenExample_Sandbox, "f1/1")
 
+      # The file now contains the generated source code
       assert File.read!(dst) =~ "def f1(x) do"
       assert File.read!(dst) =~ "x + @constant1"
     after
+      # Clean up
       File.rm!(dst)
     end
   end

@@ -13,6 +13,7 @@ defmodule CodeGen.MixProject do
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/fixtures/immutable"]
+  defp elixirc_paths(:dev), do: ["lib", "test/fixtures/immutable"]
   defp elixirc_paths(_other), do: ["lib"]
 
   # Run "mix help compile.app" to learn about applications.
