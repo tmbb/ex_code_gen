@@ -32,6 +32,12 @@ defmodule CodeGenTest do
     end
   end
 
+  test "the documentation module error exception exists" do
+    assert_raise CodeGen.DocumentationOnlyError, fn ->
+      raise CodeGen.DocumentationOnlyError, MyModule
+    end
+  end
+
   defp replace_in_file(path, to_replace, replacement) do
     new_contents =
       path
