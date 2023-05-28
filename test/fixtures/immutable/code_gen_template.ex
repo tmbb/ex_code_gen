@@ -1,4 +1,6 @@
 defmodule CodeGenTemplate do
+  @moduledoc false
+
   defmacro __code_gen__(opts) do
     c1 = Keyword.get(opts, :c1, 1)
     c2 = Keyword.get(opts, :c3, 2)

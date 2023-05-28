@@ -25,6 +25,9 @@ defmodule CodeGen.MixProject do
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
-    []
+    [
+      {:ex_doc, "~> 0.29", only: :dev},
+      {:makeup_eex, "~> 0.1.0"}
+    ]
   end
 end
