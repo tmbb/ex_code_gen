@@ -68,7 +68,7 @@ defmodule CodeGen do
     end)
   end
 
-  def unhygienize_meta(meta) do
+  defp unhygienize_meta(meta) do
     meta
     |> Keyword.delete(:context)
     |> Keyword.delete(:counter)
@@ -206,7 +206,7 @@ defmodule CodeGen do
   def _show_block(name, block) do
     block_lines = String.split(block, "\n")
     iodata = [
-        "┌────────────────────────────────────────────────────────\n",
+        "┌───────────────────────────────────────────────────────\n",
         ["│ Block: ", name, "\n"],
         "├───────────────────────────────────────────────────────\n",
         for line <- block_lines do
@@ -232,6 +232,12 @@ defmodule CodeGen do
   Displays the generated blocks
   """
   def show_blocks(module), do: module.__code_gen_info__(:show_blocks)
+
+
+  @doc """
+  Displays the generated blocks
+  """
+  def show_block(module, name), do: module.__code_gen_info__({:show_block, name})
 
   @doc """
   Get the names of the generated blocks.
@@ -261,6 +267,19 @@ defmodule CodeGen do
         blocks = __code_gen_info__(:blocks)
         binary = CodeGen._show_blocks(blocks)
         IO.puts(binary)
+      end
+
+      def __code_gen_info__({:show_block, block_name}) do
+        blocks = __code_gen_info__(:blocks)
+
+        case Enum.find(blocks, fn {k, v} -> k == block_name end) do
+          {block_name, code_to_inject} ->
+            binary = CodeGen._show_block(block_name, code_to_inject)
+            IO.puts(binary)
+
+          nil ->
+            raise "Ooops, block does not exist"
+        end
       end
 
       def __code_gen_info__(:block_names) do
